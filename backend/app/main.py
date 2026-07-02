@@ -1,14 +1,22 @@
 from fastapi import FastAPI
+from app.config import settings
 
 app = FastAPI(
-    title="Vananchal Global ERP",
-    version="1.0.0"
+    title=settings.APP_NAME,
+    version=settings.VERSION
 )
 
 @app.get("/")
 def home():
     return {
-        "company": "Vananchal Global ERP",
+        "application": settings.APP_NAME,
+        "company": settings.COMPANY_NAME,
         "status": "Running Successfully",
-        "version": "1.0.0"
+        "version": settings.VERSION
+    }
+
+@app.get("/health")
+def health():
+    return {
+        "status": "healthy"
     }
