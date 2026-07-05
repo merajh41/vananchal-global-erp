@@ -14,6 +14,8 @@ from app.routes.supplier import router as supplier_router
 from app.routes.purchase import router as purchase_router
 from app.routes.customer import router as customer_router
 from app.routes.sale import router as sale_router
+from app.routes.purchase_return import router as purchase_return_router
+from app.routes.sale_return import router as sale_return_router
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.VERSION
@@ -36,6 +38,8 @@ app.include_router(supplier_router)
 app.include_router(purchase_router)
 app.include_router(customer_router)
 app.include_router(sale_router)
+app.include_router(purchase_return_router)
+app.include_router(sale_return_router)
 
 @app.get("/")
 def home():

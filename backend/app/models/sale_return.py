@@ -14,8 +14,8 @@ from sqlalchemy.orm import relationship
 from app.database.base import Base
 
 
-class Sale(Base):
-    __tablename__ = "sales"
+class SaleReturn(Base):
+    __tablename__ = "sale_returns"
 
     id = Column(
         Integer,
@@ -23,7 +23,7 @@ class Sale(Base):
         index=True
     )
 
-    invoice_no = Column(
+    return_no = Column(
         String(50),
         unique=True,
         nullable=False
@@ -35,7 +35,7 @@ class Sale(Base):
         nullable=False
     )
 
-    sale_date = Column(
+    return_date = Column(
         Date,
         default=date.today
     )
@@ -61,7 +61,7 @@ class Sale(Base):
     user = relationship("User")
 
     items = relationship(
-        "SaleItem",
-        back_populates="sale",
+        "SaleReturnItem",
+        back_populates="sale_return",
         cascade="all, delete-orphan"
     )

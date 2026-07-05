@@ -10,8 +10,8 @@ from sqlalchemy.orm import relationship
 from app.database.base import Base
 
 
-class SaleItem(Base):
-    __tablename__ = "sale_items"
+class SaleReturnItem(Base):
+    __tablename__ = "sale_return_items"
 
     id = Column(
         Integer,
@@ -19,9 +19,9 @@ class SaleItem(Base):
         index=True
     )
 
-    sale_id = Column(
+    sale_return_id = Column(
         Integer,
-        ForeignKey("sales.id"),
+        ForeignKey("sale_returns.id"),
         nullable=False
     )
 
@@ -52,8 +52,8 @@ class SaleItem(Base):
         nullable=False
     )
 
-    sale = relationship(
-        "Sale",
+    sale_return = relationship(
+        "SaleReturn",
         back_populates="items"
     )
 

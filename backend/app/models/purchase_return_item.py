@@ -2,7 +2,7 @@ from sqlalchemy import (
     Column,
     Integer,
     Float,
-    ForeignKey,
+    ForeignKey
 )
 
 from sqlalchemy.orm import relationship
@@ -10,8 +10,8 @@ from sqlalchemy.orm import relationship
 from app.database.base import Base
 
 
-class SaleItem(Base):
-    __tablename__ = "sale_items"
+class PurchaseReturnItem(Base):
+    __tablename__ = "purchase_return_items"
 
     id = Column(
         Integer,
@@ -19,9 +19,9 @@ class SaleItem(Base):
         index=True
     )
 
-    sale_id = Column(
+    purchase_return_id = Column(
         Integer,
-        ForeignKey("sales.id"),
+        ForeignKey("purchase_returns.id"),
         nullable=False
     )
 
@@ -52,8 +52,8 @@ class SaleItem(Base):
         nullable=False
     )
 
-    sale = relationship(
-        "Sale",
+    purchase_return = relationship(
+        "PurchaseReturn",
         back_populates="items"
     )
 
