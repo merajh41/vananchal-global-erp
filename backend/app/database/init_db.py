@@ -23,5 +23,7 @@ from app.models.sale_item import SaleItem
 
 from app.models.sale_return import SaleReturn
 from app.models.sale_return_item import SaleReturnItem
+from app.models.supplier_payment import SupplierPayment
+from app.models.customer_receipt import CustomerReceipt
 def init_db():
     Base.metadata.create_all(bind=engine)
