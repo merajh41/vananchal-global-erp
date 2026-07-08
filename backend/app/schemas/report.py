@@ -32,3 +32,11 @@ class StockSummaryItem(BaseModel):
     product_name: str
     warehouse_name: str
     stock: float
+
+
+class StockValueItem(BaseModel):
+    product_id: int
+    product_name: str
+    stock: float
+    purchase_price: float
+    stock_value: float

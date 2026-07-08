@@ -12,6 +12,9 @@ from app.models.stock_ledger import StockLedger
 from app.models.supplier import Supplier
 from app.models.supplier_payment import SupplierPayment
 
+from app.services.ledger_service import LedgerService
+from app.services.supplier_ledger_service import SupplierLedgerService
+
 
 class ReportService:
 
@@ -36,43 +39,43 @@ class ReportService:
 
         month_sales = (
             db.query(func.sum(Sale.total_amount))
-            .filter(func.strftime("%Y-%m", Sale.sale_date) == today.strftime("%Y-%m"))
+            .filter(
+                func.strftime("%Y-%m", Sale.sale_date)
+                == today.strftime("%Y-%m")
+            )
             .scalar()
             or 0
         )
 
         month_purchase = (
             db.query(func.sum(Purchase.total_amount))
-            .filter(func.strftime("%Y-%m", Purchase.purchase_date) == today.strftime("%Y-%m"))
+            .filter(
+                func.strftime("%Y-%m", Purchase.purchase_date)
+                == today.strftime("%Y-%m")
+            )
             .scalar()
             or 0
         )
 
         customer_sales = (
-            db.query(func.sum(Sale.total_amount))
-            .scalar()
-            or 0
+            db.query(func.sum(Sale.total_amount)).scalar() or 0
         )
 
         customer_receipts = (
-            db.query(func.sum(CustomerReceipt.amount))
-            .scalar()
-            or 0
+            db.query(func.sum(CustomerReceipt.amount)).scalar() or 0
         )
 
         supplier_purchase = (
-            db.query(func.sum(Purchase.total_amount))
-            .scalar()
-            or 0
+            db.query(func.sum(Purchase.total_amount)).scalar() or 0
         )
 
         supplier_payment = (
-            db.query(func.sum(SupplierPayment.amount))
-            .scalar()
-            or 0
+            db.query(func.sum(SupplierPayment.amount)).scalar() or 0
         )
 
         stock_value = 0
+        low_stock_items = 0
+        out_of_stock_items = 0
 
         products = db.query(Product).all()
 
@@ -89,23 +92,8 @@ class ReportService:
 
             stock_value += stock * product.purchase_price
 
-        low_stock_items = 0
-        out_of_stock_items = 0
-
-        for product in products:
-
-            stock = (
-                db.query(func.sum(StockLedger.quantity))
-                .filter(
-                    StockLedger.product_id == product.id
-                )
-                .scalar()
-                or 0
-            )
-
             if stock <= 0:
                 out_of_stock_items += 1
-
             elif stock < 10:
                 low_stock_items += 1
 
@@ -123,3 +111,98 @@ class ReportService:
             "low_stock_items": low_stock_items,
             "out_of_stock_items": out_of_stock_items,
         }
+
+    @staticmethod
+    def customer_outstanding(db: Session):
+
+        customers = db.query(Customer).all()
+
+        data = []
+
+        for customer in customers:
+
+            ledger = LedgerService.customer_ledger(
+                db,
+                customer.id,
+            )
+
+            data.append(
+                {
+                    "id": customer.id,
+                    "name": customer.name,
+                    "outstanding": ledger["outstanding"],
+                }
+            )
+
+        return data
+
+    @staticmethod
+    def supplier_outstanding(db: Session):
+
+        suppliers = db.query(Supplier).all()
+
+        data = []
+
+        for supplier in suppliers:
+
+            ledger = SupplierLedgerService.supplier_ledger(
+                db,
+                supplier.id,
+            )
+
+            data.append(
+                {
+                    "id": supplier.id,
+                    "name": supplier.name,
+                    "outstanding": ledger["outstanding"],
+                }
+            )
+
+        return data
+
+    @staticmethod
+    def current_stock(db: Session):
+
+        data = []
+
+        products = db.query(Product).all()
+
+        for product in products:
+
+            stock = (
+                db.query(func.sum(StockLedger.quantity))
+                .filter(
+                    StockLedger.product_id == product.id
+                )
+                .scalar()
+                or 0
+            )
+
+            data.append(
+                {
+                    "product_id": product.id,
+                    "product_name": product.name,
+                    "warehouse_name": "All Warehouses",
+                    "stock": stock,
+                }
+            )
+
+        return data
+
+    @staticmethod
+    def low_stock(db: Session):
+
+        return [
+            item
+            for item in ReportService.current_stock(db)
+            if 0 < item["stock"] < 10
+        ]
+
+    @staticmethod
+    def out_of_stock(db: Session):
+
+        return [
+            item
+            for item in ReportService.current_stock(db)
+            if item["stock"] <= 0
+        ]
