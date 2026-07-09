@@ -40,3 +40,15 @@ class StockValueItem(BaseModel):
     stock: float
     purchase_price: float
     stock_value: float
+
+
+class MonthlyReportItem(BaseModel):
+    month: str
+    total: float
+
+
+class ProductSummaryItem(BaseModel):
+    product_id: int
+    product_name: str
+    quantity: float
+    amount: float

@@ -21,6 +21,11 @@ from app.routes.customer_receipt import router as customer_receipt_router
 from app.routes.ledger import router as ledger_router
 from app.routes.supplier_ledger import router as supplier_ledger_router
 from app.routes.reports import router as reports_router
+from app.routes.sales_reports import router as sales_reports_router
+from app.routes.purchase_reports import router as purchase_reports_router
+from app.routes.inventory_reports import router as inventory_reports_router
+from app.routes.expense import router as expense_router
+from app.routes.income import router as income_router
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.VERSION
@@ -50,6 +55,11 @@ app.include_router(customer_receipt_router)
 app.include_router(ledger_router)
 app.include_router(supplier_ledger_router)
 app.include_router(reports_router)
+app.include_router(sales_reports_router)
+app.include_router(purchase_reports_router)
+app.include_router(inventory_reports_router)
+app.include_router(expense_router)
+app.include_router(income_router)
 @app.get("/")
 def home():
     return {

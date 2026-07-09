@@ -25,5 +25,9 @@ from app.models.sale_return import SaleReturn
 from app.models.sale_return_item import SaleReturnItem
 from app.models.supplier_payment import SupplierPayment
 from app.models.customer_receipt import CustomerReceipt
+from app.models.expense import Expense
+from app.models.income import Income
+from app.models.bank_account import BankAccount
+from app.models.bank_transaction import BankTransaction
 def init_db():
     Base.metadata.create_all(bind=engine)
