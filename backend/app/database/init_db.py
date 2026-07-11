@@ -29,5 +29,6 @@ from app.models.expense import Expense
 from app.models.income import Income
 from app.models.bank_account import BankAccount
 from app.models.bank_transaction import BankTransaction
+from app.models.journal_entry import JournalEntry
 def init_db():
     Base.metadata.create_all(bind=engine)

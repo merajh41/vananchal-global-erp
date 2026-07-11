@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from app.config import settings
 from app.database.init_db import init_db
-
+from app.swagger import router as swagger_router
 from app.routes.auth import router as auth_router
 from app.routes.company import router as company_router
 from app.routes.users import router as users_router
@@ -26,17 +26,30 @@ from app.routes.purchase_reports import router as purchase_reports_router
 from app.routes.inventory_reports import router as inventory_reports_router
 from app.routes.expense import router as expense_router
 from app.routes.income import router as income_router
+from app.routes.bank_account import router as bank_account_router
+from app.routes.bank_transaction import router as bank_transaction_router
+from app.routes.cashbook import router as cashbook_router
+from app.routes.journal_entry import router as journal_entry_router
+from app.routes.general_ledger import router as general_ledger_router
 app = FastAPI(
     title=settings.APP_NAME,
-    version=settings.VERSION
+    version=settings.VERSION,
 )
-
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.VERSION,
+    docs_url=None,
+    redoc_url=None,
+)
+app.setup()
+# Force router expansion
+app.setup()
 
 @app.on_event("startup")
 def startup():
     init_db()
 
-
+app.include_router(swagger_router)
 app.include_router(auth_router)
 app.include_router(company_router)
 app.include_router(users_router)
@@ -60,6 +73,11 @@ app.include_router(purchase_reports_router)
 app.include_router(inventory_reports_router)
 app.include_router(expense_router)
 app.include_router(income_router)
+app.include_router(bank_account_router)
+app.include_router(bank_transaction_router)
+app.include_router(cashbook_router)
+app.include_router(journal_entry_router)
+app.include_router(general_ledger_router)
 @app.get("/")
 def home():
     return {
