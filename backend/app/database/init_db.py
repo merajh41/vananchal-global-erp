@@ -30,5 +30,9 @@ from app.models.income import Income
 from app.models.bank_account import BankAccount
 from app.models.bank_transaction import BankTransaction
 from app.models.journal_entry import JournalEntry
+from app.models.chart_of_account import ChartOfAccount
+from app.models.account_group import AccountGroup
+from app.models.account_type import AccountType
+from app.models.voucher import Voucher
 def init_db():
     Base.metadata.create_all(bind=engine)

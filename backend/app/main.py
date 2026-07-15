@@ -31,6 +31,8 @@ from app.routes.bank_transaction import router as bank_transaction_router
 from app.routes.cashbook import router as cashbook_router
 from app.routes.journal_entry import router as journal_entry_router
 from app.routes.general_ledger import router as general_ledger_router
+from app.routes.accounting import router as accounting_router
+from app.routes.accounting_master import router as accounting_master_router
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.VERSION,
@@ -78,6 +80,8 @@ app.include_router(bank_transaction_router)
 app.include_router(cashbook_router)
 app.include_router(journal_entry_router)
 app.include_router(general_ledger_router)
+app.include_router(accounting_router)
+app.include_router(accounting_master_router)
 @app.get("/")
 def home():
     return {
